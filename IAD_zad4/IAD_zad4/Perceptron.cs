@@ -37,6 +37,11 @@ namespace IAD_zad4
             }
             else throw new ArgumentException("Passed too many x-values. Should be 4, passed " + x.Length);
         }
+
+        public override string ToString()
+        {
+            return x[0] + ", " + x[1] + ", " + x[2] + ", " + x[3] + ", " + d.ToString();
+        }
     }
 
     class Perceptron

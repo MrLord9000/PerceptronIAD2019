@@ -10,7 +10,7 @@ namespace IAD_zad4
     {
         static void Main(string[] args)
         {
-            new Perceptron();
+            new CSV_import("data_class_train.csv");
         }
     }
 }
