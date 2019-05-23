@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace IAD_zad4
 {
-    class Program
+    class CSV_import
     {
-        static void Main(string[] args)
-        {
-            new Perceptron();
-        }
     }
 }
