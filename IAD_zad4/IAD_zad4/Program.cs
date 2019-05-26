@@ -36,6 +36,8 @@ namespace IAD_zad4
 
             NeuralNetwork test = new NeuralNetwork(new int[] { 4, 6, 8, 3 });
             test.RandomizeWeights(new Random());
+            test.W[1][4][2] = 666.3301f;
+            test[1, 4] = 2137.123f;
             Console.WriteLine(test);
             Console.ReadKey();
         }

@@ -5,12 +5,34 @@ namespace NeuralNetworks
 {
     class NeuralNetwork
     {
-        private int L;
         private NeuronLayer[] layers;
         private Delegate activationFunction;
         private Delegate activationDerivative;
 
+        public int L
+        {
+            get;
+            set;
+        }
 
+        public float this[int l, int i]
+        {
+            get => layers[l][i];
+            set => layers[l][i] = value;
+        }
+
+        public float[][][] W
+        {
+            get
+            {
+                float[][][] W = new float[L][][];
+                for (int i = 0; i < L; i++)
+                {
+                    W[i] = layers[i].W;
+                }
+                return W;
+            }
+        }
 
         public NeuralNetwork(int[] neuronsCount)
         {

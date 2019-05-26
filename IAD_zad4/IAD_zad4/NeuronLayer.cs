@@ -22,7 +22,7 @@ namespace NeuralNetworks
             get
             {
                 float[][] W = new float[N][];
-                for(int i = 0; i < N; i++)
+                for (int i = 0; i < N; i++)
                 {
                     W[i] = neurons[i].W;
                 }
