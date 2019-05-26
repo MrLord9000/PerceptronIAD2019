@@ -33,7 +33,7 @@ namespace NeuralNetworks
                 return W;
             }
         }
-
+        
         public NeuralNetwork(int[] neuronsCount)
         {
             L = neuronsCount.Length;
@@ -43,6 +43,16 @@ namespace NeuralNetworks
                 layers[i] = new NeuronLayer(neuronsCount[i], neuronsCount[i + 1]);
             }
             layers[L - 1] = new NeuronLayer(neuronsCount[L - 1], 0);
+        }
+
+        public float A(int l, int j)
+        {
+            float a = 0.0f;
+            for(int i = 0; i < layers[l - 1].N; i++)
+            {
+                a += this[l - 1, i] * W[l - 1][i][j];       // well... that could be quite heavy... who gives a damn? It's 21st century!!!
+            }
+            return a;
         }
 
         public void RandomizeWeights(Random rand)
