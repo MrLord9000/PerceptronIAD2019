@@ -50,6 +50,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CSV_import.cs" />
+    <Compile Include="Neuron.cs" />
+    <Compile Include="NeuronLayer.cs" />
     <Compile Include="Perceptron.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
