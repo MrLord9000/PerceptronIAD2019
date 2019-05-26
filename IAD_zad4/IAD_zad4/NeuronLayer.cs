@@ -41,12 +41,20 @@ namespace NeuralNetworks
             }
         }
 
+        public void RandomizeWeights(Random rand)
+        {
+            for(int i = 0; i < N; i++)
+            {
+                neurons[i].RandomizeWeights(rand);
+            }
+        }
+
         public override string ToString()
         {
             string str = "";
             for (int i = 0; i < N; i++)
             {
-                str += neurons[i].ToString() + "\n";
+                str += neurons[i] + "\n";
             }
             return str;
         }

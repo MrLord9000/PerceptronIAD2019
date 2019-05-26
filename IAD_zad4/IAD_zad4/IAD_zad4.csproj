@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NeuralNetwork.cs" />
     <Compile Include="CSV_import.cs" />
     <Compile Include="Neuron.cs" />
     <Compile Include="NeuronLayer.cs" />

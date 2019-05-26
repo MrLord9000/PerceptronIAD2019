@@ -24,13 +24,29 @@ namespace NeuralNetworks
             }
         }
 
+        public void RandomizeWeights(Random rand)
+        {
+            if(W != null)
+            {
+                for (int i = 0; i < W.Length; i++)
+                {
+                    W[i] = (float) rand.NextDouble() * 2 - 1;
+                }
+            }
+        }
+
         public override string ToString()
         {
             string str = "";
             str += "X = " + X + "\n";
 
-            for (int i = 0; i < W.Length; i++)
-                str += "W[" + i + "] = " + W[i] + " ";
+            if(W != null)
+            {
+                for (int i = 0; i < W.Length; i++)
+                {
+                    str += "W[" + i + "] = " + W[i] + " ";
+                }
+            }
 
             return str;
         }

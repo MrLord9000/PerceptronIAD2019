@@ -10,6 +10,8 @@ namespace NeuralNetworks
         private Delegate activationFunction;
         private Delegate activationDerivative;
 
+
+
         public NeuralNetwork(int[] neuronsCount)
         {
             L = neuronsCount.Length;
@@ -21,6 +23,22 @@ namespace NeuralNetworks
             layers[L - 1] = new NeuronLayer(neuronsCount[L - 1], 0);
         }
 
+        public void RandomizeWeights(Random rand)
+        {
+            for(int i = 0; i < L; i++)
+            {
+                layers[i].RandomizeWeights(rand);
+            }
+        }
 
+        public override string ToString()
+        {
+            string str = "";
+            for(int i = 0; i < L; i++)
+            {
+                str += "L = " + i + "\n" + layers[i];
+            }
+            return str;
+        }
     }
 }
