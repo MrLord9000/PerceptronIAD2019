@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,12 +11,11 @@ namespace IAD_zad4
 {
     class CSV_import
     {
-        private List<TrainData> csvData;
-        public List<TrainData> CsvData => csvData;
+        public List<TrainData> CsvData { get; }
 
         public CSV_import(string defaultFile = "")
         {
-            csvData = new List<TrainData>();
+            CsvData = new List<TrainData>();
 
             Console.WriteLine("File name to import data (enter to use default " + defaultFile + "): ");
             string filePath = Console.ReadLine();
@@ -27,10 +27,20 @@ namespace IAD_zad4
             using (CsvReader csvReader = new CsvReader(reader))
             {
                 Console.WriteLine("Reading .csv file...");
+
+
+
+                csvReader.Configuration.Delimiter = ",";
+                csvReader.Configuration.CultureInfo = new CultureInfo("en-EN");
+                //Console.WriteLine(System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator);
+
                 while (csvReader.Read())
                 {
-                    Console.WriteLine(csvReader.GetField(0));
-                    float[] x = new float[4] {  float.Parse(csvReader.GetField(0)), float.Parse(csvReader.GetField(1)), float.Parse(csvReader.GetField(2)), float.Parse(csvReader.GetField(3)) };
+                    Console.WriteLine(csvReader.GetField(1));
+                    float[] x = new float[4] {  csvReader.GetField<float>(0),
+                                                csvReader.GetField<float>(1),
+                                                csvReader.GetField<float>(2),
+                                                csvReader.GetField<float>(3) };
                     Species species = new Species();
 
                     if (csvReader.GetField<bool>(4))
@@ -40,7 +50,7 @@ namespace IAD_zad4
                     else if (csvReader.GetField<bool>(6))
                         species = Species.Virginica;
 
-                    csvData.Add(new TrainData(x, species));
+                    CsvData.Add(new TrainData(x, species));
                 }
             }
             Console.WriteLine("Csv read succesful!");
@@ -48,10 +58,16 @@ namespace IAD_zad4
 
         public void PrintCSV()
         {
-            foreach(TrainData elem in csvData)
+            foreach(TrainData elem in CsvData)
             {
                 Console.WriteLine(elem.ToString());
             }
+        }
+
+        public static void Main()
+        {
+            CSV_import testCSV = new CSV_import("data_class_test.csv");
+            testCSV.PrintCSV();
         }
     }
 }
