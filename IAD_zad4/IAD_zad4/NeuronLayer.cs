@@ -30,6 +30,19 @@ namespace NeuralNetworks
             }
         }
 
+        public float[][] deltaW
+        {
+            get
+            {
+                float[][] deltaW = new float[N][];
+                for (int i = 0; i < N; i++)
+                {
+                    deltaW[i] = neurons[i].deltaW;
+                }
+                return deltaW;
+            }
+        }
+
         public NeuronLayer(int N_current, int N_next)
         {
             N = N_current;

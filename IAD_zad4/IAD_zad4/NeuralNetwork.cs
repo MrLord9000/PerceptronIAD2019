@@ -6,16 +6,34 @@ namespace NeuralNetworks
     class NeuralNetwork
     {
         private NeuronLayer[] layers;
-        private Func<float, float> activationFunction;
-        private Func<float, float> activationDerivative;
 
-        private float learningCriterion
+        // PROPERTIES
+
+        private int L
         {
             get;
             set;
         }
 
-        public int L
+        public float learningCriterion
+        {
+            get;
+            set;
+        }
+
+        public float momentumCriterion
+        {
+            get;
+            set;
+        }
+
+        public Func<float, float> activationFunction
+        {
+            get;
+            set;
+        }
+
+        public Func<float, float> activationDerivative
         {
             get;
             set;
@@ -25,6 +43,19 @@ namespace NeuralNetworks
         {
             get => layers[l][i];
             set => layers[l][i] = value;
+        }
+
+        public float[] Output                                   // current output of the network
+        {
+            get
+            {
+                float[] Output = new float[layers[L - 1].N];
+                for (int i = 0; i < layers[L - 1].N; i++)
+                {
+                    Output[i] = this[L - 1, i];
+                }
+                return Output;
+            }
         }
 
         public float[][][] W
@@ -40,7 +71,48 @@ namespace NeuralNetworks
             }
         }
 
+        public float[][][] deltaW
+        {
+            get
+            {
+                float[][][] deltaW = new float[L][][];
+                for (int i = 0; i < L; i++)
+                {
+                    deltaW[i] = layers[i].deltaW;
+                }
+                return deltaW;
+            }
+        }
+
+        // CONSTRUCTORS
+
+        public NeuralNetwork()
+        {
+
+        }
+
         public NeuralNetwork(int[] neuronsCount)
+        {
+            ChangeNeuronsCount(neuronsCount);
+        }
+
+        public NeuralNetwork(int[] neuronsCount, Func<float, float> activationFunction, Func<float, float> activationDerivative)
+            : this(neuronsCount)
+        {
+            this.activationFunction = activationFunction;
+            this.activationDerivative = activationDerivative;
+        }
+
+        public NeuralNetwork(int[] neuronsCount, Func<float, float> activationFunction, Func<float, float> activationDerivative, float learningCriterion, float momentumCriterion)
+            : this(neuronsCount, activationFunction, activationDerivative)
+        {
+            this.learningCriterion = learningCriterion;
+            this.momentumCriterion = momentumCriterion;
+        }
+
+        // METHODS
+
+        public void ChangeNeuronsCount(int[] neuronsCount)
         {
             L = neuronsCount.Length;
             layers = new NeuronLayer[L];
@@ -49,13 +121,6 @@ namespace NeuralNetworks
                 layers[i] = new NeuronLayer(neuronsCount[i], neuronsCount[i + 1]);
             }
             layers[L - 1] = new NeuronLayer(neuronsCount[L - 1], 0);
-        }
-
-        public NeuralNetwork(int[] neuronsCount, Func<float, float> activationFunction, Func<float, float> activationDerivative)
-            : this(neuronsCount)
-        {
-            this.activationFunction = activationFunction;
-            this.activationDerivative = activationDerivative;
         }
 
         public void Run(float[] input)
@@ -82,20 +147,25 @@ namespace NeuralNetworks
             }
 
             float[] b_current = new float[layers[L - 1].N];                                                // keeps b-values for layer we update
-            for(int j = 0; j < layers[L - 1].N; j++)
+
+            for (int j = 0; j < layers[L - 1].N; j++)
             {
                 b_current[j] = (this[L - 1, j] - output[j]) * activationDerivative(A(L - 1, j));
-                for(int i = 0; i < layers[L - 2].N; i++)
+
+                for (int i = 0; i < layers[L - 2].N; i++)
                 {
-                    W[L - 2][i][j] += (-learningCriterion) * b_current[j] * this[L - 1, i];
+                    deltaW[L - 2][i][j] += (-learningCriterion) * b_current[j] * this[L - 1, i];
+                    W[L - 2][i][j] += deltaW[L - 2][i][j];
                 }
             }
 
             float[] b_last;
+
             for(int l = L - 2; l > 0; l++)
             {
                 b_last = b_current;
                 b_current = new float[layers[l - 1].N];
+
                 for (int j = 0; j < layers[l - 1].N; j++)
                 {
                     for(int k = 0; k < layers[l].N; k++)
@@ -107,7 +177,9 @@ namespace NeuralNetworks
 
                     for (int i = 0; i < layers[l].N; i++)
                     {
-                        W[l - 1][i][j] += (-learningCriterion) * b_current[j]  * this[l, i];
+                        deltaW[l - 1][i][j] *= momentumCriterion;                                           // deltaW[l + 1] = momentum * deltaW[l] + (-learningCriterion) * b_current[j] * this[l, i]
+                        deltaW[l - 1][i][j] += (-learningCriterion) * b_current[j] * this[l, i];            // we are using iteration to avoid keeping all of those weights deltas
+                        W[l - 1][i][j] += deltaW[l - 1][i][j];
                     }
                 }
             }

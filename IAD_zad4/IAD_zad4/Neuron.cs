@@ -16,6 +16,12 @@ namespace NeuralNetworks
             set;
         }
 
+        public float[] deltaW
+        {
+            get;
+            set;
+        }
+
         public Neuron(int N_next)
         {
             if(N_next != 0)
@@ -31,6 +37,7 @@ namespace NeuralNetworks
                 for (int i = 0; i < W.Length; i++)
                 {
                     W[i] = (float) rand.NextDouble() * 2 - 1;
+                    deltaW[i] = 0;
                 }
             }
         }

@@ -13,39 +13,48 @@ namespace IAD_zad4
         {
             //new CSV_import("data_class_train.csv");
 
-            /*
-            Neuron test = new Neuron(5);
-            Console.WriteLine(test.ToString());
-            test.W[0] = 5;
-            test.W[1] = 4;
-            test.W[2] = 3;
-            test.W[3] = 2;
-            test.W[4] = 1;
-            Console.WriteLine(test.ToString());
-            Console.ReadKey();
-            */
+            int[] neuronsCount = new int[] { 4, 8, 12, 16 };
+            float[] learningCriterions = new float[] { 0.05f, 0.1f, 0.5f };
+            float[] momentumCriterions = new float[] { 0.0f, 0.1f, 0.5f, 0.9f };
 
-            /*
-            NeuronLayer test = new NeuronLayer(4, 3);
-            test.W[0][1] = 3;
-            test.W[1][2] = 3;
-            test.W[2][0] = 1;
-            Console.WriteLine(test.ToString());
-            Console.ReadKey();
-            */
+            float[][] trainInputs = null;
+            float[][] trainResults = null;
+            float[][] testInputs = null;
+            float[][] testResults = null;
+            float[][][][] trainOutputs = null;
+            float[][][][] testOutputs = null;
 
-            NeuralNetwork test = new NeuralNetwork
-            (
-                new int[] { 4, 6, 8, 3 }, 
-                (x) => (float) (1 / (1 + Math.Pow(Math.E, -x))), 
-                (x) => (float) (Math.Pow(Math.E, x) / Math.Pow(1 + Math.Pow(Math.E, x), 2))
-            );
 
-            test.RandomizeWeights(new Random());
-            test.W[1][4][2] = 666.3301f;
-            test[1, 4] = 2137.123f;
-            Console.WriteLine(test);
-            Console.ReadKey();
+            NeuralNetwork perceptron = new NeuralNetwork();
+            perceptron.activationFunction = (x) => (float)(1 / (1 + Math.Pow(Math.E, -x)));
+            perceptron.activationDerivative = (x) => (float)(Math.Pow(Math.E, x) / Math.Pow(1 + Math.Pow(Math.E, x), 2));
+            perceptron.learningCriterion = 0.1f;
+            perceptron.momentumCriterion = 0.0f;
+
+            for (int N = 0; N < neuronsCount.Length; N++)
+            {
+                perceptron.ChangeNeuronsCount(new int[] { 4, neuronsCount[N], 3 });
+
+                for(int it = 0; it < 12; it++)
+                {
+                    perceptron.RandomizeWeights(new Random());
+
+                    for (int e = 0; e < trainInputs.Length; e++)
+                    {
+                        perceptron.Run(trainInputs[e]);
+                        trainOutputs[N][it][e] = perceptron.Output;
+                        perceptron.BackPropagation(trainResults[e]);
+                    }
+
+                    for (int e = 0; e < testInputs.Length; e++)
+                    {
+                        perceptron.Run(testInputs[e]);
+                        testOutputs[N][it][e] = perceptron.Output;
+                    }
+                }
+            }
+
+
         }
     }
 }
