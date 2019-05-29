@@ -100,8 +100,6 @@ namespace IAD_zad4
                     }
                 }
             }
-
-
         }
     }
 }

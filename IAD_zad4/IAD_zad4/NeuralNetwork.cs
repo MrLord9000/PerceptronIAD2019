@@ -154,14 +154,14 @@ namespace NeuralNetworks
 
                 for (int i = 0; i < layers[L - 2].N; i++)
                 {
-                    deltaW[L - 2][i][j] += (-learningCriterion) * b_current[j] * this[L - 1, i];
+                    deltaW[L - 2][i][j] += (-learningCriterion) * b_current[j] * this[L - 1, j]; //ZAMIENIŁEM I NA J W THIS[L - 1, i]
                     W[L - 2][i][j] += deltaW[L - 2][i][j];
                 }
             }
 
             float[] b_last;
 
-            for(int l = L - 2; l > 0; l++)
+            for(int l = L - 3; l > 0; l++) // L-2 => L-3
             {
                 b_last = b_current;
                 b_current = new float[layers[l - 1].N];
@@ -170,7 +170,7 @@ namespace NeuralNetworks
                 {
                     for(int k = 0; k < layers[l].N; k++)
                     {
-                        b_current[j] += b_last[k] * W[l][j][k];
+                        b_current[j] += b_last[k] * W[l][j][k]; 
                     }
 
                     b_current[j] *= activationDerivative(A(l - 1, j));
@@ -178,7 +178,7 @@ namespace NeuralNetworks
                     for (int i = 0; i < layers[l].N; i++)
                     {
                         deltaW[l - 1][i][j] *= momentumCriterion;                                           // deltaW[l + 1] = momentum * deltaW[l] + (-learningCriterion) * b_current[j] * this[l, i]
-                        deltaW[l - 1][i][j] += (-learningCriterion) * b_current[j] * this[l, i];            // we are using iteration to avoid keeping all of those weights deltas
+                        deltaW[l - 1][i][j] += (-learningCriterion) * b_current[j] * this[l, j]; //i na j            // we are using iteration to avoid keeping all of those weights deltas
                         W[l - 1][i][j] += deltaW[l - 1][i][j];
                     }
                 }
