@@ -70,6 +70,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="data_class_test.csv" />
+    <None Include="data_class_train.csv" />
+    <None Include="data_regr_test.csv" />
+    <None Include="data_regr_train.csv" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

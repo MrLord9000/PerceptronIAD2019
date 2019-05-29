@@ -43,14 +43,14 @@ namespace NeuralNetworks
             }
         }
 
-        public NeuronLayer(int N_current, int N_next)
+        public NeuronLayer(int N_current, int N_last)
         {
             N = N_current;
             neurons = new Neuron[N];
 
             for (int i = 0; i < N; i++)
             {
-                this.neurons[i] = new Neuron(N_next);
+                this.neurons[i] = new Neuron(N_last);
             }
         }
 

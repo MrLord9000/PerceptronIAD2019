@@ -116,11 +116,13 @@ namespace NeuralNetworks
         {
             L = neuronsCount.Length;
             layers = new NeuronLayer[L];
-            for (int i = 0; i < (L - 1); i++)
+
+            layers[0] = new NeuronLayer(neuronsCount[0], 0);
+
+            for (int i = 1; i < L; i++)
             {
-                layers[i] = new NeuronLayer(neuronsCount[i], neuronsCount[i + 1]);
+                layers[i] = new NeuronLayer(neuronsCount[i], neuronsCount[i - 1]);
             }
-            layers[L - 1] = new NeuronLayer(neuronsCount[L - 1], 0);
         }
 
         public void Run(float[] input)
@@ -152,34 +154,34 @@ namespace NeuralNetworks
             {
                 b_current[j] = (this[L - 1, j] - output[j]) * activationDerivative(A(L - 1, j));
 
-                for (int i = 0; i < layers[L - 2].N; i++)
+                for (int i = 0; i < layers[L - 1].N; i++)
                 {
-                    deltaW[L - 2][i][j] += (-learningCriterion) * b_current[j] * this[L - 1, j]; //ZAMIENIŁEM I NA J W THIS[L - 1, i]
-                    W[L - 2][i][j] += deltaW[L - 2][i][j];
+                    deltaW[L - 1][j][i] += (-learningCriterion) * b_current[j] * this[L - 1, i];            
+                    W[L - 1][j][i] += deltaW[L - 1][j][i];
                 }
             }
 
             float[] b_last;
 
-            for(int l = L - 3; l > 0; l++) // L-2 => L-3
+            for(int l = L - 2; l > 0; l--) // L-2 => L-3
             {
                 b_last = b_current;
-                b_current = new float[layers[l - 1].N];
+                b_current = new float[layers[l].N];
 
-                for (int j = 0; j < layers[l - 1].N; j++)
+                for (int j = 0; j < layers[l].N; j++)
                 {
-                    for(int k = 0; k < layers[l].N; k++)
+                    for(int k = 0; k < layers[l + 1].N; k++)
                     {
-                        b_current[j] += b_last[k] * W[l][j][k]; 
+                        b_current[j] += b_last[k] * W[l + 1][k][j]; 
                     }
 
-                    b_current[j] *= activationDerivative(A(l - 1, j));
+                    b_current[j] *= activationDerivative(A(l, j));
 
-                    for (int i = 0; i < layers[l].N; i++)
+                    for (int i = 0; i < layers[l + 1].N; i++)
                     {
-                        deltaW[l - 1][i][j] *= momentumCriterion;                                           // deltaW[l + 1] = momentum * deltaW[l] + (-learningCriterion) * b_current[j] * this[l, i]
-                        deltaW[l - 1][i][j] += (-learningCriterion) * b_current[j] * this[l, j]; //i na j            // we are using iteration to avoid keeping all of those weights deltas
-                        W[l - 1][i][j] += deltaW[l - 1][i][j];
+                        deltaW[l][j][i] *= momentumCriterion;                                           // deltaW[l + 1] = momentum * deltaW[l] + (-learningCriterion) * b_current[j] * this[l, i]
+                        deltaW[l][j][i] += (-learningCriterion) * b_current[j] * this[l, i]; //i na j            // we are using iteration to avoid keeping all of those weights deltas
+                        W[l][j][i] += deltaW[l][j][i];
                     }
                 }
             }
@@ -193,10 +195,12 @@ namespace NeuralNetworks
             }
 
             float a = 0.0f;
+
             for(int i = 0; i < layers[l - 1].N; i++)
             {
-                a += this[l - 1, i] * W[l - 1][i][j];       // well... that could be quite heavy... who gives a damn? It's 21st century!!!
+                a += this[l - 1, i] * W[l][j][i];       // well... that could be quite heavy... who gives a damn? It's 21st century!!!
             }
+
             return a;
         }
 
@@ -215,6 +219,19 @@ namespace NeuralNetworks
             {
                 str += "L = " + i + "\n" + layers[i];
             }
+            return str;
+        }
+
+        public string PrintOutput()
+        {
+            string str = "[";
+
+            for(int i = 0; i < layers[L - 1].N; i++)
+            {
+                str += this[L - 1, i] + ", ";
+            }
+            str = str.Substring(0, str.Length - 2) + "]";
+
             return str;
         }
     }

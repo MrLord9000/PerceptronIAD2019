@@ -22,12 +22,12 @@ namespace NeuralNetworks
             set;
         }
 
-        public Neuron(int N_next)
+        public Neuron(int N_last)
         {
-            if(N_next != 0)
+            if(N_last != 0)
             {
-                W = new float[N_next];
-                deltaW = new float[N_next];
+                W = new float[N_last];
+                deltaW = new float[N_last];
             }
         }
 
