@@ -14,17 +14,15 @@ namespace IAD_zad4
     struct TrainData
     {
         // Structure fields
-        private float[] x;
-        private Species d;
-
-        public Species D => d;
+        public float[] X { get; }
+        public Species D { get; }
 
         public float this[int i]
         {
             get
             {
                 if (i > 4 || i < 0) throw new IndexOutOfRangeException("Tried to reach data element number " + i + " not from range [0, 4]");
-                else return x[i];
+                else return X[i];
             }
         }
 
@@ -32,15 +30,15 @@ namespace IAD_zad4
         {
             if (x.Length == 4)
             {
-                this.x = x;
-                this.d = d;
+                X = x;
+                D = d;
             }
             else throw new ArgumentException("Passed too many x-values. Should be 4, passed " + x.Length);
         }
 
         public override string ToString()
         {
-            return x[0] + ", " + x[1] + ", " + x[2] + ", " + x[3] + ", " + d.ToString();
+            return X[0] + ", " + X[1] + ", " + X[2] + ", " + X[3] + ", " + D.ToString();
         }
     }
 

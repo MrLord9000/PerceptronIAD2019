@@ -27,6 +27,7 @@ namespace NeuralNetworks
             if(N_next != 0)
             {
                 W = new float[N_next];
+                deltaW = new float[N_next];
             }
         }
 

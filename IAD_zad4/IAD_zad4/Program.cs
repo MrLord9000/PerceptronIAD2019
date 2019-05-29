@@ -11,16 +11,57 @@ namespace IAD_zad4
     {
         static void Main(string[] args)
         {
-            //new CSV_import("data_class_train.csv");
-
             int[] neuronsCount = new int[] { 4, 8, 12, 16 };
-            float[] learningCriterions = new float[] { 0.05f, 0.1f, 0.5f };
-            float[] momentumCriterions = new float[] { 0.0f, 0.1f, 0.5f, 0.9f };
+            float[] learningCriteria = new float[] { 0.05f, 0.1f, 0.5f };
+            float[] momentumCriteria = new float[] { 0.0f, 0.1f, 0.5f, 0.9f };
 
-            float[][] trainInputs = null;
-            float[][] trainResults = null;
-            float[][] testInputs = null;
-            float[][] testResults = null;
+            CSV_import csvFile = new CSV_import("data_class_train.csv");
+
+            // Initializing arrays with adequate sizes
+            float[][] trainInputs = new float[csvFile.CsvData.Count][];
+            float[][] trainResults = new float[csvFile.CsvData.Count][];
+
+            // Filling train inputs array
+            for (int i = 0; i < trainInputs.GetLength(0); i++)
+            { 
+                trainInputs[i] = csvFile.CsvData[i].X;
+            }
+
+            // Filling train results array
+            for (int i = 0; i < trainResults.GetLength(0); i++)
+            {
+                if(csvFile.CsvData[i].D == Species.Setosa)
+                    trainResults[i] = new float[3] {1f, 0f, 0f};
+                else if (csvFile.CsvData[i].D == Species.Versicolor)
+                    trainResults[i] = new float[3] { 0f, 1f, 0f };
+                else if (csvFile.CsvData[i].D == Species.Virginica)
+                    trainResults[i] = new float[3] { 0f, 0f, 1f };
+            }
+
+
+            csvFile = new CSV_import("data_class_test.csv");
+
+            // Initializing arrays with adequate sizes
+            float[][] testInputs = new float[csvFile.CsvData.Count][];
+            float[][] testResults = new float[csvFile.CsvData.Count][];
+
+            // Filling train inputs array
+            for (int i = 0; i < testInputs.GetLength(0); i++)
+            {
+                testInputs[i] = csvFile.CsvData[i].X;
+            }
+
+            // Filling train results array
+            for (int i = 0; i < testResults.GetLength(0); i++)
+            {
+                if (csvFile.CsvData[i].D == Species.Setosa)
+                    testResults[i] = new float[3] { 1f, 0f, 0f };
+                else if (csvFile.CsvData[i].D == Species.Versicolor)
+                    testResults[i] = new float[3] { 0f, 1f, 0f };
+                else if (csvFile.CsvData[i].D == Species.Virginica)
+                    testResults[i] = new float[3] { 0f, 0f, 1f };
+            }
+
             float[][][][] trainOutputs = null;
             float[][][][] testOutputs = null;
 
@@ -35,7 +76,7 @@ namespace IAD_zad4
             {
                 perceptron.ChangeNeuronsCount(new int[] { 4, neuronsCount[N], 3 });
 
-                for(int it = 0; it < 12; it++)
+                for (int it = 0; it < 12; it++)
                 {
                     perceptron.RandomizeWeights(new Random());
 
