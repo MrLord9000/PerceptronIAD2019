@@ -72,12 +72,18 @@ namespace IAD_zad4
             perceptron.learningCriterion = 0.1f;
             perceptron.momentumCriterion = 0.0f;
 
+            trainOutputs = new float[neuronsCount.Length][][][];
+            testOutputs = new float[neuronsCount.Length][][][];
             for (int N = 0; N < neuronsCount.Length; N++)
             {
+                trainOutputs[N] = new float[12][][];
+                testOutputs[N] = new float[12][][];
                 perceptron.ChangeNeuronsCount(new int[] { 4, neuronsCount[N], 3 });
 
                 for (int it = 0; it < 12; it++)
                 {
+                    trainOutputs[N][it] = new float[trainInputs.Length][];
+                    testOutputs[N][it] = new float[testInputs.Length][];
                     perceptron.RandomizeWeights(new Random());
 
                     for (int e = 0; e < trainInputs.Length; e++)
